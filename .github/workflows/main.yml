@@ -1,0 +1,35 @@
+name: Bot de Twitter Diario
+
+# Programa para que se ejecute todos los días a las 9:00 UTC (ajústalo si necesitas otra hora)
+on:
+  schedule:
+    - cron: '0 16 * * *'  # 4:00 p.m. UTC
+
+jobs:
+  run_bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Clonar el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Paso 2: Configurar Python
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      # Paso 3: Instalar dependencias
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      # Paso 4: Ejecutar el bot
+      - name: Run bot
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+        run: python bot.py
